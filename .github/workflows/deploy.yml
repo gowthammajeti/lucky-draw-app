@@ -38,7 +38,8 @@ jobs:
             --platform linux/amd64 \
             -t ${IMAGE}:${GITHUB_SHA} \
             -t ${IMAGE}:latest \
-            --push .
+            -f frontend/Dockerfile \
+            --push frontend/
 
       - name: Deploy to Cloud Run
         run: |
