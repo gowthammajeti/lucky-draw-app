@@ -16,8 +16,8 @@ import java.util.List;
 public class LuckyController {
 
     // DTOs (records) for requests
-    public record CreateParticipant(@NotBlank String name) {}
-    public record BulkRequest(List<@NotBlank String> names) {}
+    public record CreateParticipant(@NotBlank String name, @NotBlank String email) {}
+    public record BulkRequest(List<CreateParticipant> participants) {}
 
     private final DrawService service;
 
@@ -33,13 +33,13 @@ public class LuckyController {
     @PostMapping("/participants")
     @ResponseStatus(HttpStatus.CREATED)
     public Participant add(@RequestBody @Valid CreateParticipant body) {
-        return service.add(body.name());
+        return service.add(body.name(), body.email());
     }
 
     @PostMapping("/participants/bulk")
     @ResponseStatus(HttpStatus.CREATED)
     public List<Participant> addBulk(@RequestBody @Valid BulkRequest body) {
-        return service.addBulk(body.names());
+        return service.addBulk(body.participants());
     }
 
     @GetMapping("/participants")

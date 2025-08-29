@@ -24,14 +24,19 @@ public class DrawService {
         return participants.save(new Participant(name));
     }
 
-    public List<Participant> addBulk(List<String> names) {
-        // dedupe and skip blanks
-        List<Participant> toSave = names.stream()
-                .map(n -> n == null ? "" : n.trim())
-                .filter(s -> !s.isEmpty())
-                .distinct()
-                .map(Participant::new)
-                .collect(Collectors.toList());
+    public Participant add(String name, String email) {
+        return participants.save(new Participant(name, email));
+    }
+
+    public List<Participant> addBulk(List<com.example.luckydraw.controller.LuckyController.CreateParticipant> requests) {
+        // dedupe by email and skip blanks
+        List<Participant> toSave = new java.util.ArrayList<>(
+            requests.stream()
+                .map(r -> new Participant(r.name() == null ? "" : r.name().trim(), r.email() == null ? "" : r.email().trim()))
+                .filter(p -> !p.getName().isEmpty() && !p.getEmail().isEmpty())
+                .collect(Collectors.toMap(Participant::getEmail, p -> p, (a, b) -> a))
+                .values()
+        );
         return participants.saveAll(toSave);
     }
 

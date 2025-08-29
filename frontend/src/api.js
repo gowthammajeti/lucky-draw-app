@@ -1,5 +1,5 @@
 // api.js
-const base = 'http://localhost:8080';
+const base = import.meta.env.VITE_API_BASE_URL;
 
 export async function getParticipants() {
     const r = await fetch(base + "/api/participants");
