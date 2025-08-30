@@ -1,11 +1,11 @@
-name: Deploy to Cloud Run
+name: Deploy to Cloud Runs
 
 on:
   push:
     branches: [ main ]
 
 env:
-  PROJECT_ID: infra-hulling-470422-k1   # 👈 replace with your project id
+  PROJECT_ID: infra-hulling-470422-k1
   REGION: us-east1
   REPOSITORY: web
   SERVICE: lucky-frontend
