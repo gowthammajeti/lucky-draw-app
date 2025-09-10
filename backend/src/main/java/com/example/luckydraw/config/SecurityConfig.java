@@ -24,7 +24,10 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cfg = new CorsConfiguration();
-        cfg.setAllowedOrigins(List.of("https://lucky-frontend-700830052893.us-east1.run.app"));
+        cfg.setAllowedOrigins(List.of(
+                "http://localhost:5173",
+                "https://lucky-frontend-700830052893.us-east1.run.app"
+        ));
         cfg.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
         cfg.setAllowedHeaders(List.of("*"));
         cfg.setAllowCredentials(false);
