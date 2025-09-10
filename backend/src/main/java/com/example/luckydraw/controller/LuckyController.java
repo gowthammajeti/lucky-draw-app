@@ -12,7 +12,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:5173") // allow frontend calls
+@CrossOrigin(origins = {
+        "http://localhost:5173",
+        "https://lucky-frontend-700830052893.us-east1.run.app"
+}) // allow frontend calls
 public class LuckyController {
 
     // DTOs (records) for requests
