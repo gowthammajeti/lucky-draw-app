@@ -1,21 +1,28 @@
-name: Deploy to Cloud Runs
+name: Deploy Backend
 
 on:
   push:
     branches: [ main ]
+    paths:
+      - "backend/**"
+      - ".github/workflows/deploy-backend.yml"
 
 env:
   PROJECT_ID: infra-hulling-470422-k1
   REGION: us-east1
   REPOSITORY: web
-  SERVICE: lucky-frontend
-  IMAGE: us-east1-docker.pkg.dev/infra-hulling-470422-k1/web/lucky-frontend
+  SERVICE: backend-luckydraw
+  IMAGE: us-east1-docker.pkg.dev/infra-hulling-470422-k1/web/backend-luckydraw
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write  # needed if you later switch to Workload Identity Federation
+
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Authenticate to Google Cloud
@@ -38,8 +45,8 @@ jobs:
             --platform linux/amd64 \
             -t ${IMAGE}:${GITHUB_SHA} \
             -t ${IMAGE}:latest \
-            -f frontend/Dockerfile \
-            --push frontend/
+            -f backend/Dockerfile \
+            --push backend/
 
       - name: Deploy to Cloud Run
         run: |
@@ -48,4 +55,6 @@ jobs:
             --region ${REGION} \
             --platform managed \
             --allow-unauthenticated \
-            --port 80
+            --service-account cloudrun@${PROJECT_ID}.iam.gserviceaccount.com \
+            --set-env-vars SPRING_PROFILES_ACTIVE=cloudrun \
+            --set-secrets MONGODB_URI=MONGODB_URI:latest
